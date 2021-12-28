@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 
 import br.com.uniciv.tarefas.model.Tarefa;
 import br.com.uniciv.tarefas.model.TarefaStatus;
-import br.com.uniciv.tarefas.model.TarefasCategoria;
+import br.com.uniciv.tarefas.model.TarefaCategoria;
 import br.com.uniciv.tarefas.model.Usuario;
 import br.com.uniciv.tarefas.repository.TarefaCategoriaRepository;
 import br.com.uniciv.tarefas.repository.TarefaRepository;
@@ -36,7 +36,7 @@ public class CarregaBaseDeDados {
 			
 			userRepo.save(usuario);
 			
-			TarefasCategoria categoria = new TarefasCategoria();
+			TarefaCategoria categoria = new TarefaCategoria();
 			categoria.setNome("Estudos");
 			
 			tarefaCatRepo.save(categoria);
@@ -47,9 +47,11 @@ public class CarregaBaseDeDados {
 			tarefa.setStatus(TarefaStatus.ABERTO);
 			tarefa.setVisivel(true);
 			tarefa.setCategoria(categoria);
-			tarefa.setUsuario(usuario);
+			tarefa.setUsuario(usuario);			
+		
 			
 			tarefaRepo.save(tarefa);
+	
 			
 		};
 	}

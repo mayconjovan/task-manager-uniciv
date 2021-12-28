@@ -11,10 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="tarefas")
+@NamedQuery(name="Tarefa.tarefasPorCategoria", query = "select t from Tarefa t inner join t.categoria c where c.nome = ?1")
 public class Tarefa {
 
 	@Id
@@ -30,7 +32,7 @@ public class Tarefa {
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
-	private TarefasCategoria categoria;
+	private TarefaCategoria categoria;
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
@@ -68,11 +70,11 @@ public class Tarefa {
 		this.visivel = visivel;
 	}
 
-	public TarefasCategoria getCategoria() {
+	public TarefaCategoria getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(TarefasCategoria categoria) {
+	public void setCategoria(TarefaCategoria categoria) {
 		this.categoria = categoria;
 	}
 
