@@ -2,13 +2,38 @@ package br.com.uniciv.tarefas.model;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="tarefas")
 public class Tarefa {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer id;
+	@Column(name="ds_tarefa", nullable=false, length=150)
 	private String descricao;
+	
+	@Enumerated(EnumType.STRING)
 	private TarefaStatus status;
 	private LocalDate dataEntrega;
 	private boolean visivel;
-	private TarefaCategoria categoria;
+	
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private TarefasCategoria categoria;
+	
+	@ManyToOne
+	@JoinColumn(nullable = false)
 	private Usuario usuario;
 
 	public String getDescricao() {
@@ -43,11 +68,11 @@ public class Tarefa {
 		this.visivel = visivel;
 	}
 
-	public TarefaCategoria getCategoria() {
+	public TarefasCategoria getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(TarefaCategoria categoria) {
+	public void setCategoria(TarefasCategoria categoria) {
 		this.categoria = categoria;
 	}
 
@@ -58,5 +83,6 @@ public class Tarefa {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
+ 
 
 }
