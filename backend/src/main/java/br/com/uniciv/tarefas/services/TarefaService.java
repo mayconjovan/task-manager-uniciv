@@ -7,7 +7,9 @@ import javax.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.uniciv.tarefas.exception.TarefaStatusException;
 import br.com.uniciv.tarefas.model.Tarefa;
+import br.com.uniciv.tarefas.model.TarefaStatus;
 import br.com.uniciv.tarefas.repository.TarefaRepository;
 
 @Service
@@ -34,5 +36,18 @@ public class TarefaService {
 
 	public void deleteById(Integer id) {
 		repo.deleteById(id);
+	}
+
+	public Tarefa iniciarTarefaPorId(Integer id) {
+		Tarefa tarefa = getTarefaPorId(id);
+
+		if (!TarefaStatus.ABERTO.equals(tarefa.getStatus()))
+			throw new TarefaStatusException();
+		tarefa.setStatus(TarefaStatus.EM_ANDAMENTO);
+
+		repo.save(tarefa);
+
+		return tarefa;
+
 	}
 }
