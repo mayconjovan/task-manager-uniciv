@@ -27,14 +27,14 @@ public class Tarefa {
 	private Integer id;
 	
 	@Column(name = "ds_tarefa", nullable = false, length = 150)
-	@Size(min=5, max=150, message="O campo descrição deve ter entre 5 e 150 letras.")
-	@NotBlank(message="Campo descrição nao pode ser vazio.")
+	@Size(min=5, max=150, message="tarefa.descricao.size")
+	@NotBlank(message="{tarefa.descricao.not-blank}")
 	private String descricao;
 
 	@Enumerated(EnumType.STRING)
 	private TarefaStatus status;
 	
-	@FutureOrPresent(message="Campo data de entrega deve ser uma data futura.")
+	@FutureOrPresent(message="{tarefa.descricao.future-or-present}")
 	private LocalDate dataEntrega;
 	
 	private boolean visivel;
