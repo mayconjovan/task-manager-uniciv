@@ -13,27 +13,36 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="tarefas")
-@NamedQuery(name="Tarefa.tarefasPorCategoria", query = "select t from Tarefa t inner join t.categoria c where c.nome = ?1")
+@Table(name = "tarefas")
+@NamedQuery(name = "Tarefa.tarefasPorCategoria", query = "select t from Tarefa t inner join t.categoria c where c.nome = ?1")
 public class Tarefa {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-	@Column(name="ds_tarefa", nullable=false, length=150)
-	private String descricao;
 	
+	@Column(name = "ds_tarefa", nullable = false, length = 150)
+	@Size(min=5, max=150, message="O campo descrição deve ter entre 5 e 150 letras.")
+	@NotBlank(message="Campo descrição nao pode ser vazio.")
+	private String descricao;
+
 	@Enumerated(EnumType.STRING)
 	private TarefaStatus status;
-	private LocalDate dataEntrega;
-	private boolean visivel;
 	
+	@FutureOrPresent(message="Campo data de entrega deve ser uma data futura.")
+	private LocalDate dataEntrega;
+	
+	private boolean visivel;
+
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private TarefaCategoria categoria;
-	
+
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Usuario usuario;
@@ -85,6 +94,5 @@ public class Tarefa {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
- 
 
 }

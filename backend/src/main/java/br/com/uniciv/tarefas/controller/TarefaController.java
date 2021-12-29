@@ -3,6 +3,8 @@ package br.com.uniciv.tarefas.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +40,7 @@ public class TarefaController {
 	
 	
 	@PostMapping("/tarefas")
-	public Tarefa salvarTarefa(@RequestBody Tarefa tarefa) {
+	public Tarefa salvarTarefa(@Valid @RequestBody Tarefa tarefa) {
 		return repository.save(tarefa);
 	}
 	
