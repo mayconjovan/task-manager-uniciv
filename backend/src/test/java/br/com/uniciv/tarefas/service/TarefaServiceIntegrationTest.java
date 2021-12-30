@@ -15,11 +15,12 @@ public class TarefaServiceIntegrationTest {
 
 	@Autowired
 	private TarefaService service;
+	
+	
 
 	@Test
 	void deveIniciarTarefa() {
 		Tarefa tarefa = service.iniciarTarefaPorId(3);
-		System.out.println(tarefa);
 
 		Assertions.assertEquals(TarefaStatus.EM_ANDAMENTO, tarefa.getStatus());
 	}
@@ -31,5 +32,14 @@ public class TarefaServiceIntegrationTest {
 		service.salvarTarefa(tarefa);
 
 		Assertions.assertThrows(TarefaStatusException.class, () -> service.iniciarTarefaPorId(3));
+	}
+	
+	@Test
+	void naoDeveCancelarTarefaConcluida() {
+		Tarefa tarefa = service.getTarefaPorId(3);
+		tarefa.setStatus(TarefaStatus.CONCLUIDA);
+		service.salvarTarefa(tarefa);
+		
+		Assertions.assertThrows(TarefaStatusException.class, () -> service.cancelarTarefa(3));
 	}
 }

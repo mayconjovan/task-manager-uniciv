@@ -47,6 +47,16 @@ public class Tarefa {
 	@JoinColumn(nullable = false)
 	private Usuario usuario;
 
+	
+	
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getDescricao() {
 		return descricao;
 	}
