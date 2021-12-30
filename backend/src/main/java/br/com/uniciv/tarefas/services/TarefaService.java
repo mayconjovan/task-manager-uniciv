@@ -23,7 +23,6 @@ public class TarefaService {
 	}
 
 	public List<Tarefa> getTarefasByDescricao(String descricao) {
-		System.out.println("Descricao: " + descricao);
 		return repo.findByDescricaoLike("%" + descricao + "%");
 	}
 
@@ -45,9 +44,7 @@ public class TarefaService {
 			throw new TarefaStatusException();
 		tarefa.setStatus(TarefaStatus.EM_ANDAMENTO);
 
-		repo.save(tarefa);
-
-		return tarefa;
+		return repo.save(tarefa);
 
 	}
 
@@ -59,15 +56,13 @@ public class TarefaService {
 
 		tarefa.setStatus(TarefaStatus.CONCLUIDA);
 
-		repo.save(tarefa);
-
-		return tarefa;
+		return repo.save(tarefa);
 
 	}
 
 	public Tarefa cancelarTarefa(Integer id) {
-		Tarefa tarefa = getTarefaPorId(id);		
-		
+		Tarefa tarefa = getTarefaPorId(id);
+
 		if (TarefaStatus.CONCLUIDA.equals(tarefa.getStatus()))
 			throw new TarefaStatusException();
 
