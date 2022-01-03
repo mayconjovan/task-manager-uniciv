@@ -1,5 +1,10 @@
 package br.com.uniciv.tarefas.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -8,20 +13,26 @@ import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.uniciv.tarefas.controller.assembler.TarefaModelAssembler;
 import br.com.uniciv.tarefas.controller.request.TarefaRequest;
 import br.com.uniciv.tarefas.controller.response.TarefaResponse;
 import br.com.uniciv.tarefas.model.Tarefa;
 import br.com.uniciv.tarefas.services.TarefaService;
 
 @RestController
+@RequestMapping("/tarefas")
 public class TarefaController {
 
 	@Autowired
@@ -30,31 +41,46 @@ public class TarefaController {
 	@Autowired
 	private ModelMapper mapper;
 
-	@GetMapping("/tarefas")
-	public List<TarefaResponse> todasTaferas(@RequestParam Map<String, String> parametros) {
+	@Autowired
+	private TarefaModelAssembler assembler;
+
+	@GetMapping
+	public CollectionModel<EntityModel<TarefaResponse>> todasTarefas(@RequestParam Map<String, String> parametros) {
+		List<Tarefa> tarefas = new ArrayList<>();
+		
 		if (parametros.isEmpty()) {
-			return convertTarefaResponse(service.getTodasTarefas());
+			tarefas = service.getTodasTarefas();
+		} else {
+			String descricao = parametros.get("descricao");
+			tarefas = service.getTarefasByDescricao(descricao);
 		}
-		return convertTarefaResponse(service.getTarefasByDescricao(parametros.get("descricao")));
+		
+		List<EntityModel<TarefaResponse>> tarefasModel = tarefas.stream().map(assembler::toModel).collect(Collectors.toList());
+		
+		return CollectionModel.of(tarefasModel, 
+				linkTo(methodOn(TarefaController.class).todasTarefas(new HashMap<>()))
+				.withSelfRel());
 	}
 
-	@GetMapping("/tarefas/{id}")
-	public TarefaResponse getTarefa(@PathVariable Integer id) {	
-		return mapper.map(service.getTarefaPorId(id), TarefaResponse.class);	
+	@GetMapping("/{id}")
+	public EntityModel<TarefaResponse> getTarefa(@PathVariable Integer id) {
+		Tarefa tarefa = service.getTarefaPorId(id);
+		return assembler.toModel(tarefa);
+
 	}
 
-	@PostMapping("/tarefas")
+	@PostMapping
 	public TarefaResponse salvarTarefa(@Valid @RequestBody TarefaRequest tarefaReq) {
 		Tarefa tarefa = mapper.map(tarefaReq, Tarefa.class);
-		
+
 		return mapper.map(service.salvarTarefa(tarefa), TarefaResponse.class);
 	}
 
-	@DeleteMapping("/tarefas/{id}")
+	@DeleteMapping("/{id}")
 	public void excluirTarefa(@PathVariable Integer id) {
 		service.deleteById(id);
 	}
-	
+
 	private List<TarefaResponse> convertTarefaResponse(List<Tarefa> list) {
 		return list.stream().map(obj -> mapper.map(obj, TarefaResponse.class)).collect(Collectors.toList());
 	}

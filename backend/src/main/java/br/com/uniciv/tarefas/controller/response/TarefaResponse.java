@@ -9,7 +9,7 @@ public class TarefaResponse {
 	private String status;
 	private LocalDate dataEntrega;
 	private Integer categoriaId;
-	private Integer usuarioID;
+	private Integer usuarioId;
 
 	public Integer getId() {
 		return id;
@@ -51,12 +51,12 @@ public class TarefaResponse {
 		this.categoriaId = categoriaId;
 	}
 
-	public Integer getUsuarioID() {
-		return usuarioID;
+	public Integer getUsuarioId() {
+		return usuarioId;
 	}
 
-	public void setUsuarioID(Integer usuarioID) {
-		this.usuarioID = usuarioID;
+	public void setUsuarioId(Integer usuarioID) {
+		this.usuarioId = usuarioID;
 	}
 
 }
