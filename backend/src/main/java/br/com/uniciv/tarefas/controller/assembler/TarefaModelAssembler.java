@@ -16,6 +16,7 @@ import br.com.uniciv.tarefas.controller.TarefaController;
 import br.com.uniciv.tarefas.controller.UsuarioController;
 import br.com.uniciv.tarefas.controller.response.TarefaResponse;
 import br.com.uniciv.tarefas.model.Tarefa;
+import br.com.uniciv.tarefas.model.TarefaStatus;
 
 @Component
 public class TarefaModelAssembler implements RepresentationModelAssembler<Tarefa, EntityModel<TarefaResponse>> {
@@ -34,6 +35,14 @@ public class TarefaModelAssembler implements RepresentationModelAssembler<Tarefa
 						.withRel("categoria"),
 				linkTo(methodOn(UsuarioController.class).umUsuario(tarefaResp.getUsuarioId())).withRel("usuario"));
 
+		if (TarefaStatus.EM_ANDAMENTO.equals(tarefa.getStatus())) {
+			tarefaModel.add(linkTo(methodOn(TarefaController.class).concluirTarefa(tarefa.getId())).withRel("concluir"),
+					linkTo(methodOn(TarefaController.class).cancelarTarefa(tarefa.getId())).withRel("cancelar"));
+		}
+
+		if (TarefaStatus.ABERTO.equals(tarefa.getStatus())) {
+			tarefaModel.add(linkTo(methodOn(TarefaController.class).iniciarTarefa(tarefa.getId())).withRel("iniciar"));
+		}
 		return tarefaModel;
 	}
 
