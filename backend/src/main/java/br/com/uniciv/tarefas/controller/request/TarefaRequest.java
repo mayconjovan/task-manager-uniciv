@@ -12,7 +12,7 @@ public class TarefaRequest {
 
 	private Integer id;
 
-	@Size(min = 5, max = 150, message = "tarefa.descricao.size")
+	@Size(min = 5, max = 150, message = "{tarefa.descricao.size}")
 	@NotBlank(message = "{tarefa.descricao.not-blank}")
 	private String descricao;
 	
@@ -25,7 +25,7 @@ public class TarefaRequest {
 	
 	@NotNull(message = "{tarefa.usuario.not-null}")
 	@Min(value=1, message="{tarefa.usuario.min}")
-	private Integer usuarioID;
+	private Integer usuarioId;
 
 	public Integer getId() {
 		return id;
@@ -59,12 +59,12 @@ public class TarefaRequest {
 		this.categoriaId = categoriaId;
 	}
 
-	public Integer getUsuarioID() {
-		return usuarioID;
+	public Integer getUsuarioId() {
+		return usuarioId;
 	}
 
-	public void setUsuarioID(Integer usuarioID) {
-		this.usuarioID = usuarioID;
+	public void setUsuarioId(Integer usuarioId) {
+		this.usuarioId = usuarioId;
 	}
 
 }

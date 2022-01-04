@@ -27,7 +27,7 @@ public class Tarefa {
 	private Integer id;
 
 	@Column(name = "ds_tarefa", nullable = false, length = 150)
-	@Size(min = 5, max = 150, message = "tarefa.descricao.size")
+	@Size(min = 5, max = 150, message = "{tarefa.descricao.size}")
 	@NotBlank(message = "{tarefa.descricao.not-blank}")
 	private String descricao;
 
