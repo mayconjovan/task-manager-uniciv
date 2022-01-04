@@ -64,7 +64,7 @@ public class TarefaService {
 		Tarefa tarefa = getTarefaPorId(id);
 
 		if (TarefaStatus.CONCLUIDA.equals(tarefa.getStatus()))
-			throw new TarefaStatusException();
+			throw new TarefaStatusException("{tarefa.cancelar.naopermitido}");
 
 		tarefa.setStatus(TarefaStatus.CANCELADA);
 		repo.save(tarefa);
