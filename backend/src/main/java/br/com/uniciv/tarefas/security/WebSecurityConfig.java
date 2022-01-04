@@ -1,5 +1,6 @@
 package br.com.uniciv.tarefas.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -13,12 +14,17 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import br.com.uniciv.tarefas.services.UserDetailsServiceImpl;
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private static final String[] PATHS = new String[] { "/tarefas/**", "/categoria/**", "/usuario/**" };
+
+	@Autowired
+	private UserDetailsServiceImpl userService;
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
@@ -36,8 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().passwordEncoder(passwordEncoder()).withUser("usuario")
-				.password(passwordEncoder().encode("senha")).roles("USER");
+		auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
 	}
 
 	/**
@@ -46,11 +51,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().cors().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+		.and().headers().frameOptions().sameOrigin()
 				.and().authorizeRequests().antMatchers("/api/auth/**").permitAll().antMatchers(HttpMethod.POST, PATHS)
 				.hasRole("ADMIN").antMatchers(HttpMethod.PUT, PATHS).hasRole("ADMIN")
-				.antMatchers(HttpMethod.DELETE, PATHS).hasRole("ADMIN")
-				.antMatchers(HttpMethod.GET, PATHS).hasAnyRole("ADMIN", "USER").antMatchers("/h2-console/**")
-				.permitAll().anyRequest().authenticated().and().httpBasic();
+				.antMatchers(HttpMethod.DELETE, PATHS).hasRole("ADMIN").antMatchers(HttpMethod.GET, PATHS)
+				.hasAnyRole("ADMIN", "USER").antMatchers("/h2-console/**").permitAll().anyRequest().authenticated()
+				.and().httpBasic();
 	}
 
 }

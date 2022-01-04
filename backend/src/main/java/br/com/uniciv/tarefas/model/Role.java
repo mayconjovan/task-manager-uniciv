@@ -21,6 +21,16 @@ public class Role {
 	@Column(length =20)
 	private ERole name;
 
+	public Role() {
+		
+	}
+	
+	public Role(ERole name) {
+		this.name = name;
+	}
+	
+	
+
 	public Integer getId() {
 		return id;
 	}
