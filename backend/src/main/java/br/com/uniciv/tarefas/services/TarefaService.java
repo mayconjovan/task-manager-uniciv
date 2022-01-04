@@ -17,6 +17,7 @@ public class TarefaService {
 
 	@Autowired
 	private TarefaRepository repo;
+	
 
 	public List<Tarefa> getTodasTarefas() {
 		return repo.findAll();
@@ -64,7 +65,7 @@ public class TarefaService {
 		Tarefa tarefa = getTarefaPorId(id);
 
 		if (TarefaStatus.CONCLUIDA.equals(tarefa.getStatus()))
-			throw new TarefaStatusException("{tarefa.cancelar.naopermitido}");
+			throw new TarefaStatusException();
 
 		tarefa.setStatus(TarefaStatus.CANCELADA);
 		repo.save(tarefa);
