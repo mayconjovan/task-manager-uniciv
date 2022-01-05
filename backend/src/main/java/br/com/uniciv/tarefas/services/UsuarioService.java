@@ -34,6 +34,11 @@ public class UsuarioService {
 	@Autowired
 	private RoleRepository roleRepo;
 
+	@Autowired
+	private AuthenticationManager authManager;
+	@Autowired
+	private JwtUtils jwtUtils;
+
 	public Usuario getUsuarioPorId(Integer id) {
 		return repo.findById(id).orElseThrow(() -> new EntityNotFoundException());
 	}
@@ -70,7 +75,7 @@ public class UsuarioService {
 	}
 
 	public JwtResponse autenticaUsuario(String nome, String senha) {
-		Authentication authentication = authenticationManager
+		Authentication authentication = authManager
 				.authenticate(new UsernamePasswordAuthenticationToken(nome, senha));
 
 		SecurityContextHolder.getContext().setAuthentication(authentication);

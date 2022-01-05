@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import br.com.uniciv.tarefas.services.UserDetailsServiceImpl;
 
@@ -37,6 +38,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
+	@Bean
+	public AuthTokenFilter authenticatonmJwtTokenFilter() {
+		return new AuthTokenFilter();
+	}
+
 	/**
 	 * Autenticação
 	 */
@@ -51,12 +57,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().cors().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().headers().frameOptions().sameOrigin()
-				.and().authorizeRequests().antMatchers("/api/auth/**").permitAll().antMatchers(HttpMethod.POST, PATHS)
-				.hasRole("ADMIN").antMatchers(HttpMethod.PUT, PATHS).hasRole("ADMIN")
-				.antMatchers(HttpMethod.DELETE, PATHS).hasRole("ADMIN").antMatchers(HttpMethod.GET, PATHS)
-				.hasAnyRole("ADMIN", "USER").antMatchers("/h2-console/**").permitAll().anyRequest().authenticated()
-				.and().httpBasic();
+				.and().headers().frameOptions().sameOrigin().and().authorizeRequests().antMatchers("/api/auth/**")
+				.permitAll().antMatchers(HttpMethod.POST, PATHS).hasRole("ADMIN").antMatchers(HttpMethod.PUT, PATHS)
+				.hasRole("ADMIN").antMatchers(HttpMethod.DELETE, PATHS).hasRole("ADMIN")
+				.antMatchers(HttpMethod.GET, PATHS).hasAnyRole("ADMIN", "USER").antMatchers("/h2-console/**")
+				.permitAll().anyRequest().authenticated().and()
+				.addFilterBefore(authenticatonmJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 
 }
